@@ -2,3 +2,4 @@ bitstring
 markdown
 djangorestframework
 drf-yasg
+django-rest-swagger
