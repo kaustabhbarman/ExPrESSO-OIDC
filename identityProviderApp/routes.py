@@ -1,7 +1,7 @@
 from rest_framework import routers
 
-from identityProviderApp.viewsets import IdentityProviderViewSet
+from identityProviderApp.viewsets import RelyingPartyViewSet
 
 
 router = routers.DefaultRouter()
-router.register(r'identities', IdentityProviderViewSet, basename='relyingparty')
+router.register(r'client', RelyingPartyViewSet, basename='relyingparty')

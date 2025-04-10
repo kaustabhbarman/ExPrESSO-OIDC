@@ -20,8 +20,13 @@ from libs.pycrypto.zokrates_pycrypto.eddsa import PublicKey, PrivateKey
 from libs.pycrypto.zokrates_pycrypto.field import FQ
 
 
+# CONTROLLER
+
+
+
+
 # ViewSets define the view behavior.
-class IdentityProviderViewSet(viewsets.ModelViewSet):
+class RelyingPartyViewSet(viewsets.ModelViewSet):
     queryset = RelyingParty.objects.all()
     serializer_class = RelyingPartySerializer
     permission_classes = [AllowAny]

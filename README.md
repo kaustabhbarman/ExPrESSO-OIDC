@@ -16,6 +16,20 @@ Start the server: `python3 manage.py runserver`
 
 ### Zokrates
 
+#### Django Commandlines
+After changing Model:
+
+`python manage.py makemigrations`
+
+`python manage.py migrate`
+
+Admin link: http://localhost:8000/admin
+
+username: admin
+
+password: snet2025
+
+
 
 
 

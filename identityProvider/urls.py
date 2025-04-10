@@ -25,7 +25,6 @@ from rest_framework_swagger.views import get_swagger_view
 
 from identityProviderApp.models import RelyingParty
 from identityProviderApp.routes import router
-from identityProviderApp.viewsets import IdentityProviderViewSet
 
 # Serializers define the API representation.
 
@@ -47,12 +46,16 @@ schema_view = get_schema_view(
 
 
 urlpatterns = [
+    # admin url
     path("admin/", admin.site.urls),
+    # rest api urls
     path('api-auth/', include('rest_framework.urls')),
+    # swagger urls
     path('swagger<format>/', schema_view.without_ui(cache_timeout=0), name='schema-json'),
     path('swagger/', schema_view.with_ui('swagger', cache_timeout=0), name='schema-swagger-ui'),
     path('redoc/', schema_view.with_ui('redoc', cache_timeout=0), name='schema-redoc'),
-
-    path('', include((router.urls,'identityProvider'), namespace='identityProvider')),
+    # client app urls
+    path('', include((router.urls,'identityProvider'), namespace='relyingparty')),
+    #path('identityprovider', include((router.urls,'identityProvider'), namespace='identityProvider')),
 
 ]
