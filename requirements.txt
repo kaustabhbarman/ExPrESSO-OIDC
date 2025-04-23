@@ -3,3 +3,4 @@ markdown
 djangorestframework
 drf-yasg
 django-rest-swagger
+django-oidc-provider

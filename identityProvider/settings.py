@@ -40,6 +40,7 @@ INSTALLED_APPS = [
     'identityProviderApp.apps.IdentityproviderappConfig',
     "rest_framework",
     "drf_yasg",
+    "oidc_provider",
 ]
 
 MIDDLEWARE = [
@@ -140,3 +141,6 @@ REST_FRAMEWORK = {
         'rest_framework.permissions.AllowAny',
     ]
 }
+
+
+LOGIN_URL = '/accounts/login/'
