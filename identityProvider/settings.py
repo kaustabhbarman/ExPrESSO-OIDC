@@ -144,3 +144,8 @@ REST_FRAMEWORK = {
 
 
 LOGIN_URL = '/accounts/login/'
+
+OIDC_USERINFO = 'identityProviderApp.views.userinfo'
+
+
+

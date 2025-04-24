@@ -19,6 +19,8 @@ from libs.pycrypto.zokrates_pycrypto.babyjubjub import Point
 from libs.pycrypto.zokrates_pycrypto.eddsa import PublicKey, PrivateKey
 from libs.pycrypto.zokrates_pycrypto.field import FQ
 
+from oidc_provider.models import Client, ResponseType
+
 
 # CONTROLLER
 
@@ -32,6 +34,7 @@ class RelyingPartyViewSet(viewsets.ModelViewSet):
     permission_classes = [AllowAny]
     authentication_classes = [CsrfExemptSessionAuthentication]
 
+    ## will not be needed soon
     @action(detail=False, methods=['get'], url_path='download-file', name='df')
     def proving_key_url(self,request, pk=None):
         try:
@@ -47,10 +50,12 @@ class RelyingPartyViewSet(viewsets.ModelViewSet):
         client_id = hashlib.sha512(raw_msg.encode("utf-8")).digest()
 
         request.data['uid'] = str(raw_msg)
-        serializer = self.get_serializer(data=request.data)
 
+        ## Writes the data into db
+        serializer = self.get_serializer(data=request.data)
         serializer.is_valid(raise_exception=True)
         self.perform_create(serializer)
+
         Point.generator()
         #headers = self.get_success_headers(serializer.data)
         public_key=KeyValue.objects.get(key='PUBLIC').value
@@ -61,7 +66,9 @@ class RelyingPartyViewSet(viewsets.ModelViewSet):
         # create client id
 
         sig = p.sign(client_id)
-
+        c = Client(name=request.data['name'], client_id=raw_msg, client_secret='', redirect_uris=[request.data['redirection_url']])
+        c.save()
+        c.response_types.add(ResponseType.objects.get(value='code'))
         print("Cleint ID: ", raw_msg)
         print("Public Key: ", public_key)
         print("Signature: ", sig)
