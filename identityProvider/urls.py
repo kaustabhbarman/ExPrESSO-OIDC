@@ -22,6 +22,7 @@ from drf_yasg.views import get_schema_view
 from rest_framework import routers, viewsets, serializers, permissions
 from rest_framework.urls import app_name
 from rest_framework_swagger.views import get_swagger_view
+from django.contrib.auth import views as auth_views
 
 from identityProviderApp.models import RelyingParty
 from identityProviderApp.routes import router
@@ -50,7 +51,7 @@ urlpatterns = [
     path("admin/", admin.site.urls),
     # rest api urls
     path('api-auth/', include('rest_framework.urls')),
-
+    path("accounts/", include("django.contrib.auth.urls")),
     path('openid/', include('oidc_provider.urls', namespace='oidc_provider')),
 
     # swagger urls
