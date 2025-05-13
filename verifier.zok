@@ -1,0 +1,16 @@
+from "ecc/babyjubjubParams" import BabyJubJubParams;
+import "signatures/verifyEddsa.code" as verifyEddsa;
+import "ecc/babyjubjubParams.code" as context;
+import "hashes/sha256/512bitPadded" as sha256;
+
+//  private preimage (secret0, secret1), private signature (R, S), public public key (A), private hash digest (M0, M1)
+def main(private field[2] R, private field S, field[2] A, private u32[8] secret0, private u32[8] secret1) -> bool {
+    BabyJubJubParams context = context();
+
+    bool hasOwnership = verifyEddsa(R, S, A, secret0, secret1, context);
+
+    //u32[8] h = sha256(secret0, secret1);
+    //bool hasKnowledge = h == M0;
+
+    return hasOwnership;
+}

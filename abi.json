@@ -24,7 +24,7 @@
       }
     },
     {
-      "name": "M0",
+      "name": "secret0",
       "public": false,
       "type": "array",
       "components": {
@@ -33,7 +33,7 @@
       }
     },
     {
-      "name": "M1",
+      "name": "secret1",
       "public": false,
       "type": "array",
       "components": {
