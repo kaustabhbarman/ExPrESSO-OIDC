@@ -1,0 +1,65 @@
+{#<html>#}
+{#<head>#}
+{#    <title>Replying Party</title>#}
+{#    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css">#}
+{#    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0-alpha1/dist/css/bootstrap.min.css">#}
+{#    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0-alpha1/dist/js/bootstrap.bundle.min.js"></script>#}
+{#    <body>#}
+{#        <h1>Test</h1>#}
+{#        <a href="accounts/login?response_type=id_token">Login with Identity Provider</a>#}
+{#    </body>#}
+{#</html>#}
+
+<!DOCTYPE html>
+<html>
+<head>
+
+    <title>OIDC RP</title>
+
+</head>
+<body>
+
+    <center>
+        <h1>OpenID Connect RP Example</h1>
+        <button id="login-button">Login</button>
+    </center>
+
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/2.2.2/jquery.min.js"></script>
+    <script src="https://www.sakimura.org/test/openidconnect.js"></script>
+
+    <script type="text/javascript">
+    $(function() {
+        var clientInfo = {
+            client_id : '64452f717d8945d48a0bf2e99b9cecff',
+            redirect_uri : 'http://localhost:8000/rp/welcome/'
+        };
+
+        OIDC.setClientInfo(clientInfo);
+
+        var providerInfo = OIDC.discover('http://localhost:8000/openid');
+
+        OIDC.setProviderInfo(providerInfo);
+        OIDC.storeInfo(providerInfo, clientInfo);
+
+        // Restore configuration information.
+        OIDC.restoreInfo();
+
+        // Get Access Token
+        var token = OIDC.getAccessToken();
+
+        // Make userinfo request using access_token.
+        if (token !== null) {
+            $.get('http://localhost:8000/openid/userinfo/?access_token='+token, function( data ) {
+                alert('USERINFO: '+ JSON.stringify(data));
+            });
+        }
+
+        // Make an authorization request if the user click the login button.
+        $('#login-button').click(function (event) {
+            OIDC.login();
+        });
+    });
+    </script>
+
+</body>
+</html>

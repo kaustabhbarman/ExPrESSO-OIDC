@@ -1,19 +1,10 @@
 from django.conf import settings
 from django.contrib.auth.views import LoginView
+from django.http import HttpResponse
 from django.shortcuts import render
 from django.utils.http import url_has_allowed_host_and_scheme
+from django.views.generic import TemplateView
 
-
-# Create your views here.
-def userinfo(claims, user):
-    # Populate claims dict.
-    claims['name'] = '{0} {1}'.format(user.first_name, user.last_name)
-    claims['given_name'] = user.first_name
-    claims['family_name'] = user.last_name
-    claims['email'] = user.email
-    claims['address']['street_address'] = '...'
-
-    return claims
 
 class CustomLoginView(LoginView):
 
@@ -34,3 +25,17 @@ class CustomLoginView(LoginView):
         return redirect_to if url_is_safe else ""
 
 
+class ReplyingPartyPage(TemplateView):
+    template_name = "relyingparty.html"
+
+class ReplyingPartyWelcomePage(TemplateView):
+    template_name = "demo.html"
+
+
+def userinfo(claims, user):
+    claims['name'] = '{0} {1}'.format(user.first_name, user.last_name)
+    claims['given_name'] = user.first_name
+    claims['family_name'] = user.last_name
+    claims['email'] = user.email
+    claims['address']['street_address'] = '...'
+    return claims

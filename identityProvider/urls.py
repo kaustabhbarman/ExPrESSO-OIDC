@@ -27,7 +27,7 @@ from django.contrib.auth import views as auth_views
 import identityProviderApp.views
 from identityProviderApp.models import RelyingParty
 from identityProviderApp.routes import router
-
+from identityProviderApp.views import ReplyingPartyPage, ReplyingPartyWelcomePage
 # Serializers define the API representation.
 
 
@@ -53,6 +53,7 @@ urlpatterns = [
     # rest api urls
     path('api-auth/', include('rest_framework.urls')),
     path('accounts/login/', identityProviderApp.views.CustomLoginView.as_view()),
+    #path('serviceprovider/', ),
     path("accounts/", include("django.contrib.auth.urls")),
     path('openid/', include('oidc_provider.urls', namespace='oidc_provider')),
 
@@ -61,6 +62,10 @@ urlpatterns = [
     path('swagger/', schema_view.with_ui('swagger', cache_timeout=0), name='schema-swagger-ui'),
     path('redoc/', schema_view.with_ui('redoc', cache_timeout=0), name='schema-redoc'),
     # client app urls
+    path('rp/welcome/', ReplyingPartyWelcomePage.as_view(), name='rp'),
+    path('rp/', ReplyingPartyPage.as_view(), name='rp'),
+
+
     path('', include((router.urls,'identityProvider'), namespace='relyingparty')),
     #path('identityprovider', include((router.urls,'identityProvider'), namespace='identityProvider')),
 
