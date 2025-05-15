@@ -30,8 +30,10 @@
     <script type="text/javascript">
     $(function() {
         var clientInfo = {
+            // client id just to bypass library validation
             client_id : '64452f717d8945d48a0bf2e99b9cecff',
             redirect_uri : 'http://localhost:8000/rp/welcome/'
+            // add cryptographic key information here
         };
 
         OIDC.setClientInfo(clientInfo);
