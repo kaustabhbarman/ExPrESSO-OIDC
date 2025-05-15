@@ -24,6 +24,7 @@ from rest_framework.urls import app_name
 from rest_framework_swagger.views import get_swagger_view
 from django.contrib.auth import views as auth_views
 
+import identityProviderApp.views
 from identityProviderApp.models import RelyingParty
 from identityProviderApp.routes import router
 
@@ -51,6 +52,7 @@ urlpatterns = [
     path("admin/", admin.site.urls),
     # rest api urls
     path('api-auth/', include('rest_framework.urls')),
+    path('accounts/login/', identityProviderApp.views.CustomLoginView.as_view()),
     path("accounts/", include("django.contrib.auth.urls")),
     path('openid/', include('oidc_provider.urls', namespace='oidc_provider')),
 
