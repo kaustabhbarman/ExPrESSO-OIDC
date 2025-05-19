@@ -1,0 +1,111 @@
+services:
+  oidf:
+    build: ./oidf
+    container_name: oidf
+    ports:
+      - "8000:8000"
+    volumes:
+      - ./OIDF:/app
+    working_dir: /app
+    environment:
+      DJANGO_SUPERUSER_USERNAME: admin
+      DJANGO_SUPERUSER_PASSWORD: snet2025
+      DJANGO_SUPERUSER_EMAIL: s.pandey@tu-berlin.de
+    command: |
+      bash -c "
+        python manage.py migrate && \
+        python manage.py shell -c \"from django.contrib.auth import get_user_model; User = get_user_model(); print('Superuser exists') if User.objects.filter(username='admin').exists() else User.objects.create_superuser('admin', 's.pandey@tu-berlin.de', 'snet2025')\" && \
+        python manage.py runserver 0.0.0.0:8000
+      "
+    depends_on:
+      - postgres
+    networks:
+      - app_network
+
+  identityprovider:
+    build: ./identityprovider
+    container_name: identityprovider
+    ports:
+      - "8001:8001"
+    volumes:
+      - ./identityprovider:/app
+    working_dir: /app
+    environment:
+      DJANGO_SUPERUSER_USERNAME: admin
+      DJANGO_SUPERUSER_PASSWORD: snet2025
+      DJANGO_SUPERUSER_EMAIL: s.pandey@tu-berlin.de
+    command: |
+      bash -c "
+        python manage.py migrate && \
+        python manage.py shell -c \"from django.contrib.auth import get_user_model; User = get_user_model(); print('Superuser exists') if User.objects.filter(username='admin').exists() else User.objects.create_superuser('admin', 's.pandey@tu-berlin.de', 'snet2025')\" && \
+        python manage.py runserver 0.0.0.0:8001
+      "
+    depends_on:
+      - postgres
+    networks:
+      - app_network
+
+  relyingparty:
+    build: ./relyingparty
+    container_name: relyingparty
+    ports:
+      - "8002:8002"
+    volumes:
+      - ./relyingparty:/app
+    working_dir: /app
+    environment:
+      DJANGO_SUPERUSER_USERNAME: admin
+      DJANGO_SUPERUSER_PASSWORD: snet2025
+      DJANGO_SUPERUSER_EMAIL: s.pandey@tu-berlin.de
+    command: |
+      bash -c "
+        python manage.py migrate && \
+        python manage.py shell -c \"from django.contrib.auth import get_user_model; User = get_user_model(); print('Superuser exists') if User.objects.filter(username='admin').exists() else User.objects.create_superuser('admin', 's.pandey@tu-berlin.de', 'snet2025')\" && \
+        python manage.py runserver 0.0.0.0:8002
+      "
+    depends_on:
+      - postgres
+    networks:
+      - app_network
+
+  postgres:
+    image: postgres:13
+    container_name: postgres_db
+    environment:
+      POSTGRES_DB: django_db
+      POSTGRES_USER: user
+      POSTGRES_PASSWORD: password
+    command: >
+      bash -c "docker-entrypoint.sh postgres
+      && psql -U user -c 'CREATE DATABASE oidfdb;'
+      && psql -U user -c 'CREATE DATABASE identityproviderdb;'
+      && psql -U user -c 'CREATE DATABASE relyingpartydb;'"
+    # entrypoint: >
+    #   bash -c "
+    #   if [ ! -f /var/lib/postgresql/data/.initialized ]; then
+    #     docker-entrypoint.sh postgres &
+    #     sleep 5;
+    #     psql -U user -c 'CREATE DATABASE oidfdb;';
+    #      psql -U user -c 'CREATE DATABASE relyingpartydb;';
+    #     psql -U user -c 'CREATE DATABASE identityproviderdb;';
+    #     touch /var/lib/postgresql/data/.initialized;
+    #     wait;
+    #   else
+    #     docker-entrypoint.sh postgres;
+    #   fi
+    #   "
+    ports:
+      - "5432:5432"
+    volumes:
+      - postgres_data:/var/lib/postgresql/data
+      - ./init-db:/docker-entrypoint-initdb.d
+    networks:
+      - app_network
+
+volumes:
+  postgres_data:
+
+
+networks:
+  app_network:
+    driver: bridge

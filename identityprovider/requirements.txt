@@ -1,0 +1,9 @@
+Django==5.1.9
+bitstring
+markdown
+djangorestframework
+drf-yasg
+django-rest-swagger
+django-oidc-provider
+psycopg2-binary
+
