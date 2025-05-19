@@ -27,7 +27,7 @@ from django.http import JsonResponse
 env="15300566248148176359251087857135083433702490185699534455721503897716581654586 1731041133691031814672876691350015875319337371889544898254566634510717581651 20009691480797713157780151153250476165103337718307266577863304399093974841573 12388223396296843178610444897126549579656707086806151712173508413150086990354 902023574817401310148700772379947263210897069942156176345593234473024929067"
 
 
-def register_cleint(request, name, **args):
+def register_client(request, name, **args):
     # env
     # client_id = hashlib.sha512(client_id.encode("utf-8")).digest()
     # pn=5
@@ -46,5 +46,5 @@ urlpatterns = [
     path('api-auth/', include('rest_framework.urls')),
     path("accounts/", include("django.contrib.auth.urls")),
     path('openid/', include('oidc_provider.urls', namespace='oidc_provider')),
-    path('client/<str:name>', register_cleint)
+    path('client/<str:name>', register_client)
 ]
