@@ -1,3 +1,5 @@
+{% load static %}
+
 <!DOCTYPE html>
 <html>
 <head>
@@ -5597,6 +5599,55 @@ KJUR.jws.IntDate.intDate2Zulu = function(f) {
     </div>
 </div>
 
+<footer class="container fixed-bottom">
+    <div class="row">
+        <div class="col-12">
+            <div class="card">
+            <h5>Raw JSON from oidp for this IDP</h5>
+            <p><code>{{ json_data }}</code></p>
+            </div>
+        </div>
+    </div>
+    <div class="row">
+        <div class="col-12">
+            <div class="card">
+            <h5>Raw JSON form idp for this relying party</h5>
+            <p><code>{{ r_data }}</code></p>
+            </div>
+        </div>
+    </div>
+     <div class="row">
+        <div class="col-12">
+            <div class="card">
+            <h5>Raw JSON form proof</h5>
+            <p><code>{{ proof }}</code></p>
+            </div>
+        </div>
+    </div>
+    <div class="row">
+        <div class="col-12">
+            <div class="card">
+            <h5>Verification of proof</h5>
+            <p><code>{{ verify }}</code></p>
+            </div>
+        </div>
+    </div>
+        <div class="row">
+        <div class="col-12">
+            <div class="card">
+            <h5>Time</h5>
+            <table>
+                {% for value in times %}
+                    <tr>
+                        <td>{{ value }}</td>
+                    </tr>
+                {% endfor %}
+            </table>
+            </div>
+        </div>
+    </div>
 
+    
+</footer>
 </body>
 </html>

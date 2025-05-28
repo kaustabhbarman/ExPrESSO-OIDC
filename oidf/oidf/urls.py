@@ -21,6 +21,8 @@ from django.urls import path
 from django.urls import path, include
 import hashlib
 import os
+
+from idp.routes import router
 from oidf.settings import BASE_DIR
 
 def get_sha256_hash(file_path):
@@ -66,7 +68,7 @@ urlpatterns = [
     path("hash/<int:id>/",get_client_hash_by_id),
     path("hash/<str:name>/",get_client_hash_by_name),
     path("artificat/<str:name>/",create_client_artifact_by_name),
-    
+    path('idp/', include((router.urls,'identityProvider'), namespace='idp')),
     path("bash/", run_bash_script)
 
 ]

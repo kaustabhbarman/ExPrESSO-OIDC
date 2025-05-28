@@ -40,6 +40,7 @@ INSTALLED_APPS = [
     "rest_framework",
     "drf_yasg",
     "oidc_provider",
+    'idp.apps.IdpConfig',
 ]
 
 MIDDLEWARE = [
@@ -124,6 +125,7 @@ USE_I18N = True
 
 USE_TZ = True
 
+SITE_ID= 1
 
 # Static files (CSS, JavaScript, Images)
 # https://docs.djangoproject.com/en/5.2/howto/static-files/

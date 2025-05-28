@@ -6,4 +6,4 @@ drf-yasg
 django-rest-swagger
 django-oidc-provider
 psycopg2-binary
-
+requests

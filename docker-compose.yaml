@@ -1,4 +1,33 @@
 services:
+  # zokrates:
+  #   build: ./zokrates_service # ✅ Build from your new custom Dockerfile
+  #   container_name: zokrates
+  #   platform: linux/amd64
+  #   ports: # ✅ Expose the Flask app port
+  #     - "5000:5000"
+  #   volumes:
+  #     - ./zokrates_workspace:/home/zokrates
+  #     - zokrates_artifacts:/home/zokrates/out
+  #   working_dir: /home/zokrates # Flask app will start here, can still use
+  #   # entrypoint: ["tail", "-f", "/dev/null"] # ❌ REMOVE THIS, the CMD in Dockerfile handles keeping it alive
+  #   # CMD in Dockerfile overrides the default image's CMD/ENTRYPOINT.
+  #   # If the base Zokrates image uses ENTRYPOINT for the `zokrates` binary,
+  #   # you might need to adjust `zokrates_service/Dockerfile` to ensure `zokrates` is in PATH.
+  #   # The current `Dockerfile` approach assumes `zokrates` is still in PATH.
+
+    # networks:
+    #   - app_network
+  # zokrates:
+  #   image: zokrates/zokrates
+  #   container_name: zokrates
+  #   platform: linux/amd64            # ✅ Force x86_64 emulation
+  #   volumes:
+  #     - ./zokrates_workspace:/home/zokrates
+  #   working_dir: /home/zokrates
+  #   entrypoint: ["tail", "-f", "/dev/null"]  # ✅ Keep container alive
+
+  # #   networks:
+  # #     - app_network
   oidf:
     build: ./oidf
     container_name: oidf
@@ -6,6 +35,9 @@ services:
       - "8000:8000"
     volumes:
       - ./OIDF:/app
+      - ./zokrates_workspace:/app/zokrates_workspace
+      - /var/run/docker.sock:/var/run/docker.sock
+      
     working_dir: /app
     environment:
       DJANGO_SUPERUSER_USERNAME: admin
@@ -19,8 +51,9 @@ services:
       "
     depends_on:
       - postgres
-    networks:
-      - app_network
+    # networks:
+    #   - app_network
+
 
   identityprovider:
     build: ./identityprovider
@@ -29,6 +62,9 @@ services:
       - "8001:8001"
     volumes:
       - ./identityprovider:/app
+      - ./identityprovider_data:/app/data
+      - ./zokrates_workspace:/app/zokrates_workspace
+      - /var/run/docker.sock:/var/run/docker.sock
     working_dir: /app
     environment:
       DJANGO_SUPERUSER_USERNAME: admin
@@ -42,8 +78,8 @@ services:
       "
     depends_on:
       - postgres
-    networks:
-      - app_network
+    # networks:
+    #   - app_network
 
   relyingparty:
     build: ./relyingparty
@@ -52,6 +88,8 @@ services:
       - "8002:8002"
     volumes:
       - ./relyingparty:/app
+      - ./zokrates_workspace:/app/zokrates_workspace
+      - /var/run/docker.sock:/var/run/docker.sock
     working_dir: /app
     environment:
       DJANGO_SUPERUSER_USERNAME: admin
@@ -65,8 +103,8 @@ services:
       "
     depends_on:
       - postgres
-    networks:
-      - app_network
+    #networks:
+    #  - app_network
 
   postgres:
     image: postgres:13
@@ -99,13 +137,19 @@ services:
     volumes:
       - postgres_data:/var/lib/postgresql/data
       - ./init-db:/docker-entrypoint-initdb.d
-    networks:
-      - app_network
+    # networks:
+    #   - app_network
 
 volumes:
   postgres_data:
+  oidf_data:
+  identityprovider_data:
+  relyingparty_data:
+  zokrates_workspace:
 
 
-networks:
-  app_network:
-    driver: bridge
+
+
+# networks:
+#   app_network:
+#     driver: bridge

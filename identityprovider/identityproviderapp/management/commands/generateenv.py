@@ -9,7 +9,6 @@ from libs.pycrypto.zokrates_pycrypto.eddsa import PrivateKey, PublicKey
 from libs.pycrypto.zokrates_pycrypto.field import FQ
 from libs.pycrypto.zokrates_pycrypto.utils import write_signature_for_zokrates_cli, to_bytes
 
-
 class Command(BaseCommand):
 
     def serialize_signature_for_zokrates(self, pk, sig, msg):
@@ -25,6 +24,7 @@ class Command(BaseCommand):
         sk = PrivateKey.from_rand()
         pk = PublicKey.from_private(sk)
         print(pk)
+        print(sk)
         client_id = hashlib.sha512("002084".encode("utf-8")).digest()
         sig = sk.sign(client_id)
 
