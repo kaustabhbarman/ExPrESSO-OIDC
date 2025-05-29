@@ -23,6 +23,9 @@ from django.contrib import admin
 from django.shortcuts import render
 from django.urls import path
 import requests
+import urllib
+from django.views.generic import TemplateView
+
 from libs.pycrypto.zokrates_pycrypto.babyjubjub import Point
 from libs.pycrypto.zokrates_pycrypto.eddsa import PublicKey, PrivateKey
 from libs.pycrypto.zokrates_pycrypto.field import FQ
@@ -58,7 +61,7 @@ def get_proving_key_file(response_json_data):
 
 # get information of a idp currently just 6
 # get idp from oidf
-def get_registered_replyingparty_by_id(id, retries=2):
+def get_registered_relyingparty_by_id(id, retries=2):
     url = f"http://identityprovider:8001/rp/{id}/"
     for i in range(retries):
         try:
@@ -123,43 +126,64 @@ def verify_proof(data):
                           "-j", f"/home/zokrates/zokrates_workspace/rp/{data['id']}/proof.json"])
     return res
 
-
+def url_encode_json(data):
+    json_string = json.dumps(data)
+    encoded_string = urllib.parse.quote(json_string)
+    return encoded_string
 
 def landing_page(request):
 
     t0 = time.time()
     response_json_data= get_hash_of_idp("idp1")
     t1 = time.time()
-    total1 = t1-t0
+    hash_generate_proof = t1-t0
 
     t0 = time.time()
-    registered_relying_party= get_registered_replyingparty_by_id(6)
+    registered_relying_party= get_registered_relyingparty_by_id(6)
     t1 = time.time()
-    total2 = t1-t0
+    registration_replying_party = t1-t0
 
     t0 = time.time()
     create_zok_signature_data(registered_relying_party)
     t1 = time.time()
-    total3 = t1-t0
+    create_zok_signature = t1-t0
 
     t0 = time.time()
     calculate_witness(response_json_data,registered_relying_party)
     t1 = time.time()
-    total4 = t1-t0
+    calculate_witness_time = t1-t0
 
     t0 = time.time()
     proof= generate_proof(registered_relying_party)
     t1 = time.time()
-    total5 = t1-t0
+    generate_proof_time = t1-t0
 
     t0 = time.time()
     verify=verify_proof(registered_relying_party)
     t1 = time.time()
-    total6 = t1-t0
-    return render(request, "landing.html", {"cleint": 0, "json_data": response_json_data, 'r_data':registered_relying_party, 
-                                            'proof':proof, "verify":verify,"times":[total1, total2, total3, total4, total5, total6]})
+    verify_time = t1-t0
+
+    # url encode json proof material
+    encoded_proof=url_encode_json(proof)
+
+
+
+    return render(request, "landing.html", {"cleint": 0, "json_data": response_json_data, 
+                                            'r_data':registered_relying_party, 
+                                            'proof':proof, "verify":verify,
+                                            "url_encoded_query_proof":encoded_proof,
+                                            "times":{"hash_generate_proof":hash_generate_proof,
+                                                     "get_idp_infomation":registration_replying_party,
+                                                     "create_zok_signature":create_zok_signature,
+                                                     "calculate_witness": calculate_witness_time,
+                                                     "generate_proof": generate_proof_time,
+                                                     "verification_time":verify_time,
+                                                     }})
 
 urlpatterns = [
     path('admin/', admin.site.urls),
+    path('welcome/', TemplateView.as_view(template_name='demo.html'), name='rp'),
     path('',landing_page, name='landing_page'),
+    
 ]
+

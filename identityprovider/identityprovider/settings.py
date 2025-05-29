@@ -146,3 +146,5 @@ REST_FRAMEWORK = {
 LOGIN_URL = '/accounts/login/'
 OIDC_LOGIN_URL= '/accounts/login/'
 OIDC_IDTOKEN_INCLUDE_CLAIMS=True
+OIDC_AFTER_USERLOGIN_HOOK= "identityproviderapp.views.idp_after_userlogin_hook"
+OIDC_USERINFO = 'identityproviderapp.views.userinfo'

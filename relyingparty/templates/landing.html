@@ -5561,9 +5561,9 @@ KJUR.jws.IntDate.intDate2Zulu = function(f) {
                 OIDC.supportedRequestOptions = ['scope', 'response_type', 'display', 'max_age', 'claims', 'request','proof'];
                 var clientInfo = {
                     // client id just to bypass library validation
-                    client_id : '002084',
+                    client_id : '{{r_data.client_id}}',
                     redirect_uri : 'http://localhost:8002/welcome/',
-                    proof: "extra-id-for-express-framework"
+                    proof: "{{url_encoded_query_proof}}"
                     // add cryptographic key information here
 
                 };
@@ -5632,14 +5632,22 @@ KJUR.jws.IntDate.intDate2Zulu = function(f) {
             </div>
         </div>
     </div>
-        <div class="row">
+    <div class="row">
         <div class="col-12">
             <div class="card">
-            <h5>Time</h5>
+            <h5>Url encoded proof</h5>
+            <p><code>{{ url_encoded_query_proof }}</code></p>
+            </div>
+        </div>
+    </div>
+    <div class="row">
+        <div class="col-12">
+            <div class="card">
+            <h5>Time in seconds</h5>
             <table>
-                {% for value in times %}
+                {% for key, value in times.items %}
                     <tr>
-                        <td>{{ value }}</td>
+                        <td>{{key}}: {{ value }}</td>
                     </tr>
                 {% endfor %}
             </table>
